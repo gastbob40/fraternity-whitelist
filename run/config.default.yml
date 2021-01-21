@@ -1,3 +1,5 @@
 bot:
   prefix: '!'
   token: BOT_TOKEN
+
+voice_channel: VOICE_CHANNEL_ID
