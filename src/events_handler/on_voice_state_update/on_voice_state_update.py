@@ -3,6 +3,7 @@ import yaml
 
 # Get configuration
 from src.events_handler.on_voice_state_update.channel_join import channel_join
+from src.events_handler.on_voice_state_update.channel_leave import channel_leave
 
 with open("run/config.yml", 'r') as stream:
     data = yaml.safe_load(stream)
@@ -23,4 +24,4 @@ class OnVoiceStateUpdate:
         # Case 2, the player leaves the channel
         if before.channel and before.channel.id == data['waiting_channel']:
             if after.channel is None or after.channel.id != data['waiting_channel']:
-                print(before.channel)
+                await channel_leave(member)

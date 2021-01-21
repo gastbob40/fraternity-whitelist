@@ -1,4 +1,5 @@
 import discord
+from termcolor import colored
 
 from src.utils.embeds_manager import EmbedsManager
 
@@ -18,3 +19,32 @@ class WhiteListQueue:
                 f"Un staff s'occupera de vous dès qu'il sera disponible."
             )
         )
+
+        print(
+            colored("[FRaternity Whitelist]", 'yellow'),
+            colored(
+                f"{member.name}#{member.discriminator} ({member.id}) just join the queue at pos {len(WhiteListQueue.requests)}",
+                'blue'
+            )
+        )
+
+    @staticmethod
+    async def remove_player(member: discord.Member):
+        WhiteListQueue.requests.remove(member.id)
+
+        await member.send(
+            embed=EmbedsManager.error_embed(
+                "Vous venez de quitter la file d'attente",
+                f"Vous perdez donc votre priorité dans la file d'attente."
+            )
+        )
+
+        for i in range(len(WhiteListQueue.requests)):
+            target: discord.User = await WhiteListQueue.client.fetch_user(WhiteListQueue.requests[i])
+
+            await target.send(
+                embed=EmbedsManager.complete_embed(
+                    "Avancement dans la file d'attente",
+                    f"Vous êtes maintenant en position **{i + 1}** dans la file d'attente.\n\n"
+                )
+            )

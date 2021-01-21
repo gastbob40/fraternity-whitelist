@@ -2,10 +2,13 @@ import discord
 import yaml
 
 from src.events_handler.events_handler import EventsHandler
+from src.utils.queue import WhiteListQueue
 
 # Setup intents
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
+
+WhiteListQueue.client = client
 
 # Get configuration
 with open("run/config.yml", 'r') as stream:
