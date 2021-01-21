@@ -2,6 +2,8 @@ import discord
 import yaml
 
 # Get configuration
+from src.events_handler.on_voice_state_update.channel_join import channel_join
+
 with open("run/config.yml", 'r') as stream:
     data = yaml.safe_load(stream)
 
@@ -16,7 +18,7 @@ class OnVoiceStateUpdate:
         # Case 1, the player join the channel
         if after.channel and after.channel.id == data['waiting_channel']:
             if before.channel is None or before.channel.id != data['waiting_channel']:
-                print(after.channel)
+                await channel_join(member)
 
         # Case 2, the player leaves the channel
         if before.channel and before.channel.id == data['waiting_channel']:

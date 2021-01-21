@@ -7,6 +7,6 @@ class OnReady:
     @staticmethod
     async def handle(client: discord.Client):
         print(
-            colored("[FRaternity Support]", 'yellow'),
+            colored("[FRaternity Whitelist]", 'yellow'),
             colored(f"Logged in as {client.user} on {len(client.guilds)} servers", 'blue')
         )
