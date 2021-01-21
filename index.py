@@ -22,5 +22,10 @@ async def on_message(message):
     await EventsHandler.handle_on_message(client, message)
 
 
+@client.event
+async def on_voice_state_update(member, before, after):
+    await EventsHandler.on_voice_state_update(member, before, after)
+
+
 # Start he bot
 client.run(data['bot']['token'])
