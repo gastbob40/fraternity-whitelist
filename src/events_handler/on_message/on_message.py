@@ -1,7 +1,12 @@
 import discord
+import yaml
 
 from src.utils.embeds_manager import EmbedsManager
 from src.utils.queue import WhiteListQueue
+
+# Get configuration
+with open("run/config.yml", 'r') as stream:
+    data = yaml.safe_load(stream)
 
 
 class OnMessage:
@@ -15,6 +20,9 @@ class OnMessage:
 
 
 async def take_whitelist(client: discord.Client, message: discord.Message):
+    if message.channel != data['command_channel']:
+        return
+
     if message.author.voice is None:
         return await message.author.send(
             embed=EmbedsManager.error_embed(
