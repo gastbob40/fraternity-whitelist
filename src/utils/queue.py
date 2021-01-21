@@ -9,6 +9,10 @@ class WhiteListQueue:
     client: discord.Client
 
     @staticmethod
+    def is_empty():
+        return len(WhiteListQueue.requests) == 0
+
+    @staticmethod
     async def add_player(member: discord.Member):
         WhiteListQueue.requests.append(member.id)
 
@@ -30,7 +34,8 @@ class WhiteListQueue:
 
     @staticmethod
     async def remove_player(member: discord.Member):
-        WhiteListQueue.requests.remove(member.id)
+        if member.id in WhiteListQueue.requests:
+            WhiteListQueue.requests.remove(member.id)
 
         await member.send(
             embed=EmbedsManager.error_embed(
