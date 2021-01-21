@@ -20,7 +20,7 @@ class OnMessage:
 
 
 async def take_whitelist(client: discord.Client, message: discord.Message):
-    if message.channel != data['command_channel']:
+    if message.channel.id != data['command_channel']:
         return
 
     if message.author.voice is None:
