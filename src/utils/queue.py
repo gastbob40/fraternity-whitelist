@@ -33,16 +33,19 @@ class WhiteListQueue:
         )
 
     @staticmethod
-    async def remove_player(member: discord.Member):
-        if member.id in WhiteListQueue.requests:
-            WhiteListQueue.requests.remove(member.id)
+    async def remove_player(member: discord.Member, contact=True):
+        if member.id not in WhiteListQueue.requests:
+            return
 
-        await member.send(
-            embed=EmbedsManager.error_embed(
-                "Vous venez de quitter la file d'attente",
-                f"Vous perdez donc votre priorité dans la file d'attente."
+        WhiteListQueue.requests.remove(member.id)
+
+        if contact:
+            await member.send(
+                embed=EmbedsManager.error_embed(
+                    "Vous venez de quitter la file d'attente",
+                    f"Vous perdez donc votre priorité dans la file d'attente."
+                )
             )
-        )
 
         for i in range(len(WhiteListQueue.requests)):
             target: discord.User = await WhiteListQueue.client.fetch_user(WhiteListQueue.requests[i])
@@ -53,3 +56,17 @@ class WhiteListQueue:
                     f"Vous êtes maintenant en position **{i + 1}** dans la file d'attente.\n\n"
                 )
             )
+
+    @staticmethod
+    async def take_player(staff: discord.Member):
+        target: discord.Member = await staff.guild.fetch_member(WhiteListQueue.requests[0])
+
+        await target.send(
+            embed=EmbedsManager.complete_embed(
+                'Entretient en cours',
+                f'{staff.display_name} vient de vous prendre en entretient.'
+            )
+        )
+
+        await target.move_to(staff.voice.channel)
+        await WhiteListQueue.remove_player(target, False)

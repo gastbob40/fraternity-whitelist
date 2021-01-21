@@ -7,7 +7,7 @@ from src.utils.queue import WhiteListQueue
 class OnMessage:
     @staticmethod
     async def handle(client: discord.Client, message: discord.Message):
-        if message.author.bot:
+        if message.author.bot or isinstance(message.author, discord.User):
             return
 
         if message.content == '!next':
@@ -16,7 +16,7 @@ class OnMessage:
 
 async def take_whitelist(client: discord.Client, message: discord.Message):
     if message.author.voice is None:
-        await message.author.send(
+        return await message.author.send(
             embed=EmbedsManager.error_embed(
                 "Erreur",
                 "Vous devez être connecté en vocal pour faire une whitelist."
@@ -24,9 +24,11 @@ async def take_whitelist(client: discord.Client, message: discord.Message):
         )
 
     if WhiteListQueue.is_empty():
-        await message.author.send(
+        return await message.author.send(
             embed=EmbedsManager.error_embed(
                 "Erreur",
                 "Il n'y a personne à faire passer."
             )
         )
+
+    await WhiteListQueue.take_player(message.author)
