@@ -1,0 +1,3 @@
+bot:
+  prefix: '!'
+  token: BOT_TOKEN
