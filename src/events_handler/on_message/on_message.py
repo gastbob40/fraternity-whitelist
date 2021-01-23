@@ -23,6 +23,14 @@ async def take_whitelist(client: discord.Client, message: discord.Message):
     if message.channel.id != data['command_channel']:
         return
 
+    if not message.author.permissions_in(message.channel).manage_messages:
+        return await message.author.send(
+            embed=EmbedsManager.error_embed(
+                "Erreur",
+                "Vous n'avez pas les permissions nécessaires"
+            )
+        )
+
     if message.author.voice is None:
         return await message.author.send(
             embed=EmbedsManager.error_embed(
